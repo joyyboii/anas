@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>add to cart</title>
+    <style>
+        body{
+            background-color: blanchedalmond;
+            color:black;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+	    
+        <div class="cart-products">
+            <h3>Cart</h3>
+            <ul id="cart-list"></ul>
+            <button id="checkout" onclick="checkout()">Checkout</button>
+            <button id="clear-cart" onclick="clearCart()">Clear Cart</button>
+        </div>
+    
+        <script>
+            const cartBtn = document.querySelector('.cart');
+            const cartList = document.getElementById('cart-list');
+            const overlay = document.querySelector('.overlay');
+            const checkoutBtn = document.querySelector('.cart-products button');
+            let cartProducts = [];
+    
+            // Function to add product to cart
+            function addToCart(product) {
+                cartProducts.push(product);
+                renderCart();
+            }
+    
+            // Function to remove product from cart
+            function removeFromCart(index) {
+                cartProducts.splice(index, 1);
+                renderCart();
+            }
+            function added(){
+                alert("Item has been added to cart");}
+            function busy(){
+                alert("Server busy; Please try again later");}
+            function clearCart() {
+        cartProducts = [];
+        renderCart();
+    }
+            function checkout() {
+        let total = 0;
+        for (let i = 0; i < cartProducts.length; i++) {
+            total += cartProducts[i].price;
+        }
+        alert(`Thank you for your purchase! Your total price is $${total.toFixed(2)}`);
+        clearCart();
+    }
+    
+            // Function to render cart
+            function renderCart() {
+        const cartList = document.getElementById('cart-list');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        cartList.innerHTML = '';
+        let total = 0;
+        if (cartProducts.length === 0) {
+            cartList.innerHTML = 'Cart is empty.';
+        } else {
+            cartProducts.forEach((product, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `${product.name} (${product.price})`;
+                cartList.appendChild(li);
+                total += product.price;
+                const removeBtn = document.createElement('button');
+                removeBtn.textContent = 'Remove';
+                removeBtn.addEventListener('click', () => {
+                    removeFromCart(index);
+                });
+                li.appendChild(removeBtn);
+            });
+        }
+        checkoutBtn.textContent = `Checkout ($${total.toFixed(2)})`;
+    }
+    
+            // Function to toggle cart visibility
+            function toggleCart() {
+                const cartProductsEl = document.querySelector('.cart-products');
+                cartProductsEl.style.display = cartProductsEl.style.display === 'none' ? 'block' : 'none';
+                overlay.style.display = cartProductsEl.style.display;
+            }
+    
+            // Event listeners
+            cartBtn.addEventListener('click', toggleCart);
+            overlay.addEventListener('click', toggleCart);
+    
+            // Add products to the cart
+            const products = [
+                {
+                    name: 'Glass set',
+                    price: 19.99
+                },
+                {
+                    name: 'Classic timepiece',
+                    price: 29.99
+                },
+                {
+                    name: 'Blender',
+                    price: 39.99
+                }
+            ];
+    
+            const productCards = document.querySelectorAll('.product-card');
+            productCards.forEach((productCard, index) => {
+                const addToCartBtn = productCard.querySelector('button');
+                addToCartBtn.addEventListener('click', () => {
+                    addToCart(products[index]);
+                });
+            });
+    
+        </script>
+</body>
+</html>
